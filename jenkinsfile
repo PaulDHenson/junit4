@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+	    steps {
+                echo 'Building..'
+		sh 'mvn compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+		sh 'mvn test'
+            }
+        }
+	stage('Package') {
+		steps {
+		  sh 'mvn package'
+		}
+	}
+        stage('Deploy') {
+            steps {
+		 sh 'curl -u admin:Password -X PUT "http://artifactory:8081/artifactory/libs-snapshot-local/com/devops-bootcamp/samples/junit619/junit/4.16-SNAPSHOT/junit-4.16-20201028.223748-1.jar" -T /var/lib/jenkins/workspace/unit/target/junit-4.14-SNAPSHOT.jar'
+	    }
+        }
+    }
+}
